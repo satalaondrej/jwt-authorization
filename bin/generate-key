@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+$keypair = sodium_crypto_sign_keypair();
+
+$secretKey = sodium_crypto_sign_secretkey($keypair);
+$publicKey = sodium_crypto_sign_publickey($keypair);
+
+echo '-----';
+echo PHP_EOL;
+echo "Secret key: " . base64_encode($secretKey);
+echo PHP_EOL;
+echo "Public key: " . base64_encode($publicKey);
+echo PHP_EOL;
+echo '-----';
+echo PHP_EOL;
