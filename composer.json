@@ -19,14 +19,15 @@
         "psr/http-server-middleware": "*",
         "psr/http-server-handler": "*",
         "symfony/property-access": "^6.4 || ^7.1",
-        "symfony/serializer": "^6.4"
+        "symfony/serializer": "^6.4 || ^7.1"
     },
     "require-dev": {
         "ext-sodium": "*",
         "lcobucci/clock": "^3.0",
         "nyholm/psr7": "1.8.2",
+        "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "12.3.8",
-        "symfony/clock": "v7.3.0"
+        "symfony/clock": "^7.3"
     },
     "autoload": {
         "psr-4": {
@@ -41,5 +42,9 @@
     "config": {
         "process-timeout": 0,
         "sort-packages": true
+    },
+    "scripts": {
+        "phpstan": "phpstan analyse",
+        "test": "phpunit tests"
     }
 }

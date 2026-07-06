@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Nalgoo\JwtAuthorization;
 
@@ -25,6 +26,9 @@ use Symfony\Component\Serializer\Serializer;
 
 readonly class JwtAuthorizationMiddleware implements MiddlewareInterface
 {
+	/**
+	 * @param non-empty-string $publicKey
+	 */
 	public function __construct(
 		private JwtFacade             $jwtFacade,
 		private ClockInterface        $clock,
@@ -33,6 +37,9 @@ readonly class JwtAuthorizationMiddleware implements MiddlewareInterface
 	) {
 	}
 
+	/**
+	 * @param non-empty-string $publicKey
+	 */
 	public static function create(string $publicKey): JwtAuthorizationMiddleware
 	{
 		$serializer = new Serializer([
@@ -71,6 +78,9 @@ readonly class JwtAuthorizationMiddleware implements MiddlewareInterface
 		return $handler->handle($request);
 	}
 
+	/**
+	 * @return JwtAuthorizationRule[]
+	 */
 	private function parseAuthorizationHeader(ServerRequestInterface $request): array
 	{
 		if ($request->hasHeader('Authorization')) {
@@ -89,13 +99,15 @@ readonly class JwtAuthorizationMiddleware implements MiddlewareInterface
 					throw new JwtAuthorizationException('Invalid token' , 0, $e);
 				}
 
-				/** @var JwtAuthorizationRule[] $rules */
 				if ($parsedToken->claims()->has('access')) {
 					try {
-						return $this->denormalizer->denormalize(
+						/** @var JwtAuthorizationRule[] $rules */
+						$rules = $this->denormalizer->denormalize(
 							$parsedToken->claims()->get('access'),
 							JwtAuthorizationRule::class . '[]',
 						);
+
+						return $rules;
 					} catch (\Symfony\Component\Serializer\Exception\ExceptionInterface $e) {
 						throw new JwtAuthorizationException('Invalid token', 0, $e);
 					}
