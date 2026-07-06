@@ -4,3 +4,9 @@ parameters:
 		- src
 		- tests
 		- bin
+	ignoreErrors:
+		# jwt v4's LooseValidAt wants Lcobucci\Clock\Clock; v5 accepts a PSR clock, so this only errors on v4.
+		-
+			message: '#LooseValidAt constructor expects Lcobucci\\Clock\\Clock#'
+			path: src/JwtAuthorizationMiddleware.php
+			reportUnmatched: false

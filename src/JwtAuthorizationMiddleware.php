@@ -93,6 +93,7 @@ readonly class JwtAuthorizationMiddleware implements MiddlewareInterface
 					$parsedToken = $this->jwtFacade->parse(
 						$token,
 						new Constraint\SignedWith(new Eddsa(), Key\InMemory::base64Encoded($this->publicKey)),
+						// jwt v4 wants a Lcobucci\Clock\Clock, v5 a PSR clock; caller must supply a compatible one.
 						new Constraint\LooseValidAt($this->clock, new DateInterval('PT5S')),
 					);
 				} catch (InvalidTokenStructure|RequiredConstraintsViolated $e) {
