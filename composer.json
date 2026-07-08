@@ -23,6 +23,7 @@
     },
     "require-dev": {
         "ext-sodium": "*",
+        "friendsofphp/php-cs-fixer": "^3.93.0",
         "lcobucci/clock": "^3.0",
         "nyholm/psr7": "1.8.2",
         "phpstan/phpstan": "^2.2",
@@ -44,6 +45,8 @@
         "sort-packages": true
     },
     "scripts": {
+        "cs-fixer-check": "php-cs-fixer check -vv",
+        "cs-fixer-fix": "php-cs-fixer fix -vv",
         "phpstan": "phpstan analyse",
         "test": "phpunit tests"
     }

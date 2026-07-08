@@ -7,9 +7,9 @@ use Lcobucci\JWT\Signer\Eddsa;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token\Builder;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
-echo "Enter signing (private) key encoded in Base64: ";
+echo 'Enter signing (private) key encoded in Base64: ';
 
 $stdin = fopen('php://stdin', 'r');
 $line = fgets($stdin);
@@ -21,34 +21,39 @@ echo PHP_EOL;
 function readchar(): string
 {
 	global $stdin;
-    system("stty -icanon");
-    $char = fread($stdin, 1);
-    system("stty sane");
+	system('stty -icanon');
+	$char = fread($stdin, 1);
+	system('stty sane');
+
 	return $char;
 }
 
 function read_line(string $prompt): string
 {
-	echo $prompt . ': ';
+	echo $prompt.': ';
 	global $stdin;
 	$line = fgets($stdin);
+
 	return trim($line);
 }
 
-function getBuilder(): Builder {
-    $builder = new Builder(new JoseEncoder(), ChainedFormatter::withUnixTimestampDates());
-    $now     = new DateTimeImmutable();
-    $builder = $builder
-        ->issuedAt($now)
-        ->canOnlyBeUsedAfter($now)
-        ->expiresAt($now->modify('+10 years'));
+function getBuilder(): Builder
+{
+	$builder = new Builder(new JoseEncoder(), ChainedFormatter::withUnixTimestampDates());
+	$now = new DateTimeImmutable();
+	$builder = $builder
+		->issuedAt($now)
+		->canOnlyBeUsedAfter($now)
+		->expiresAt($now->modify('+10 years'));
+
 	return $builder;
 }
 
 function getToken(Builder $builder): string
 {
-  global $privateKey;
-  return $builder->getToken(new Eddsa(), InMemory::base64Encoded($privateKey))->toString();
+	global $privateKey;
+
+	return $builder->getToken(new Eddsa(), InMemory::base64Encoded($privateKey))->toString();
 }
 
 function generateJwt(): string
@@ -62,7 +67,7 @@ function generateJwt(): string
 
 function generateCustomJwt(): string
 {
-	$action   = read_line('Action');
+	$action = read_line('Action');
 	$resource = read_line('Resource');
 
 	$data = [
@@ -74,32 +79,32 @@ function generateCustomJwt(): string
 
 function renderJwt(string $name, string $jwt): void
 {
-	echo '-----' . PHP_EOL;
-	echo "JWT for " . $name . ':' . PHP_EOL;
+	echo '-----'.PHP_EOL;
+	echo 'JWT for '.$name.':'.PHP_EOL;
 	echo PHP_EOL;
 	echo $jwt;
 	echo PHP_EOL;
-	echo '-----' . PHP_EOL;
+	echo '-----'.PHP_EOL;
 }
 
 while (1) {
-	echo "[T] Generate test token" . PHP_EOL;
-	echo "[C] Generate custom token" . PHP_EOL;
-	echo "[Q] Quit" . PHP_EOL;
-	echo "Choose action: ";
+	echo '[T] Generate test token'.PHP_EOL;
+	echo '[C] Generate custom token'.PHP_EOL;
+	echo '[Q] Quit'.PHP_EOL;
+	echo 'Choose action: ';
 
 	$command = readchar($stdin);
 	echo PHP_EOL;
 
-	switch(strtoupper($command)) {
-	  case 'T':
-		  renderJwt('Long-lived token (10 years) with action = test and resource = urn:test', generateJwt());
-		  break;
-	  case 'C':
-		  renderJwt('Custom token valid for 1 hour', generateCustomJwt());
-		  break;
-	  case 'Q':
-		die;
+	switch (strtoupper($command)) {
+		case 'T':
+			renderJwt('Long-lived token (10 years) with action = test and resource = urn:test', generateJwt());
+			break;
+		case 'C':
+			renderJwt('Custom token valid for 1 hour', generateCustomJwt());
+			break;
+		case 'Q':
+			exit;
 	}
 
 	echo PHP_EOL;

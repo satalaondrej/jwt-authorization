@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Nalgoo\JwtAuthorization;
 
-use DateInterval;
 use Lcobucci\JWT\JwtFacade;
 use Lcobucci\JWT\Signer\Eddsa;
 use Lcobucci\JWT\Signer\Key;
@@ -18,7 +17,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use RuntimeException;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -30,10 +28,10 @@ readonly class JwtAuthorizationMiddleware implements MiddlewareInterface
 	 * @param non-empty-string $publicKey
 	 */
 	public function __construct(
-		private JwtFacade             $jwtFacade,
-		private ClockInterface        $clock,
+		private JwtFacade $jwtFacade,
+		private ClockInterface $clock,
 		private DenormalizerInterface $denormalizer,
-		private string                $publicKey,
+		private string $publicKey,
 	) {
 	}
 
@@ -66,7 +64,7 @@ readonly class JwtAuthorizationMiddleware implements MiddlewareInterface
 			return new \Symfony\Component\Clock\NativeClock();
 		}
 
-		throw new RuntimeException('Cannot find Clock implementation');
+		throw new \RuntimeException('Cannot find Clock implementation');
 	}
 
 	public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -94,10 +92,10 @@ readonly class JwtAuthorizationMiddleware implements MiddlewareInterface
 						$token,
 						new Constraint\SignedWith(new Eddsa(), Key\InMemory::base64Encoded($this->publicKey)),
 						// jwt v4 wants a Lcobucci\Clock\Clock, v5 a PSR clock; caller must supply a compatible one.
-						new Constraint\LooseValidAt($this->clock, new DateInterval('PT5S')),
+						new Constraint\LooseValidAt($this->clock, new \DateInterval('PT5S')),
 					);
 				} catch (InvalidTokenStructure|RequiredConstraintsViolated $e) {
-					throw new JwtAuthorizationException('Invalid token' , 0, $e);
+					throw new JwtAuthorizationException('Invalid token', 0, $e);
 				}
 
 				if ($parsedToken->claims()->has('access')) {
@@ -105,7 +103,7 @@ readonly class JwtAuthorizationMiddleware implements MiddlewareInterface
 						/** @var JwtAuthorizationRule[] $rules */
 						$rules = $this->denormalizer->denormalize(
 							$parsedToken->claims()->get('access'),
-							JwtAuthorizationRule::class . '[]',
+							JwtAuthorizationRule::class.'[]',
 						);
 
 						return $rules;

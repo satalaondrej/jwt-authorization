@@ -16,11 +16,7 @@ class UriDenormalizer implements DenormalizerInterface
 	public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): UriInterface
 	{
 		if (!is_string($data)) {
-			throw NotNormalizableValueException::createForUnexpectedDataType(
-				'The data to denormalize into a URI must be a string.',
-				$data,
-				['string'],
-			);
+			throw NotNormalizableValueException::createForUnexpectedDataType('The data to denormalize into a URI must be a string.', $data, ['string']);
 		}
 
 		return Http::new($data);

@@ -11,8 +11,8 @@ use PHPUnit\Framework\TestCase;
 
 class JwtAuthorizationMiddlewareTest extends TestCase
 {
-	const PRIVATE_KEY = 'ougbDwhdV3dFaryfuIfZPznuMu77nBx/AidxkZY9iZuIgvBnejBEvhh9MRjBpK8tEPRSYBHDPjdEd5HLHZHR3w==';
-	const PUBLIC_KEY  = 'iILwZ3owRL4YfTEYwaSvLRD0UmARwz43RHeRyx2R0d8=';
+	public const PRIVATE_KEY = 'ougbDwhdV3dFaryfuIfZPznuMu77nBx/AidxkZY9iZuIgvBnejBEvhh9MRjBpK8tEPRSYBHDPjdEd5HLHZHR3w==';
+	public const PUBLIC_KEY = 'iILwZ3owRL4YfTEYwaSvLRD0UmARwz43RHeRyx2R0d8=';
 
 	/**
 	 * @var array<int, array{action: string, resource: string, jwt: string}>
@@ -27,7 +27,7 @@ class JwtAuthorizationMiddlewareTest extends TestCase
 
 		$factory = new Psr17Factory();
 		$requestIn = $factory->createServerRequest('GET', '/')
-			->withHeader('Authorization', 'Bearer ' . $this->tokens[0]['jwt']);
+			->withHeader('Authorization', 'Bearer '.$this->tokens[0]['jwt']);
 
 		$middleware = JwtAuthorizationMiddleware::create(self::PUBLIC_KEY);
 		$middleware->process($requestIn, $handler);

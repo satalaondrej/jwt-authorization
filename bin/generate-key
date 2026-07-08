@@ -8,9 +8,9 @@ $publicKey = sodium_crypto_sign_publickey($keypair);
 
 echo '-----';
 echo PHP_EOL;
-echo "Secret key: " . base64_encode($secretKey);
+echo 'Secret key: '.base64_encode($secretKey);
 echo PHP_EOL;
-echo "Public key: " . base64_encode($publicKey);
+echo 'Public key: '.base64_encode($publicKey);
 echo PHP_EOL;
 echo '-----';
 echo PHP_EOL;

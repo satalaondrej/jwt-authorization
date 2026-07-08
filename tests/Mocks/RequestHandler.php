@@ -9,7 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Will handle Request by doing nothing (and creating empty Response).
- * Last passed Request will be available with getRequest()
+ * Last passed Request will be available with getRequest().
  */
 class RequestHandler implements RequestHandlerInterface
 {
@@ -20,6 +20,7 @@ class RequestHandler implements RequestHandlerInterface
 		$this->request = $request;
 
 		$factory = new Psr17Factory();
+
 		return $factory->createResponse();
 	}
 
